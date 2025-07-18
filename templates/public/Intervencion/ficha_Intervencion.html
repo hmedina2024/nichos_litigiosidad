@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica PGN - Propuesta Visual Responsive</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/my_style.css') }}?v=1.1" />
+</head>
+
+<body>
+    {% include 'public/includes/menu_sidebar.html' %}
+        <div class="content active-view">
+            <div id="dashboard-view" class="card">
+                <div class="card-header">Dashboard de Analítica</div>
+                <p>Bienvenido al panel de control. Aquí podrás ver un resumen de las fichas y procesos.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                    <div class="card" style="flex: 1; min-width: 250px; padding: 15px;">
+                        <div style="font-size: 18px; font-weight: bold; color: #1976d2;">Total Fichas</div>
+                        <div style="font-size: 36px; font-weight: bold; margin-top: 5px;">1250</div>
+                    </div>
+                    <div class="card" style="flex: 1; min-width: 250px; padding: 15px;">
+                        <div style="font-size: 18px; font-weight: bold; color: #4caf50;">Pendientes Conciliación</div>
+                        <div style="font-size: 36px; font-weight: bold; margin-top: 5px;">235</div>
+                    </div>
+                    <div class="card" style="flex: 1; min-width: 250px; padding: 15px;">
+                        <div style="font-size: 18px; font-weight: bold; color: #ff9800;">Procesos Judiciales Activos</div>
+                        <div style="font-size: 36px; font-weight: bold; margin-top: 5px;">680</div>
+                    </div>
+                </div>
+            </div>
+
+            
+    </div>
+
+    <script>
+        // Datos Dummy
+        const DUMMY_FICHAS_CONCILIACION = [
+            { id: '1', numeroFicha: 'FC-001', fechaSolicitud: '2025-01-01', procuraduria: 'Procuraduría Bogotá', medioControl: 'Reparación Directa', causaProcesal: 'Muerte por omisión', entidadInvolucrada: 'Policía Nacional', valorEstimado: 150000000, estado: 'Pendiente', descripcionHechos: 'Simulación de hechos de la conciliación 1.' },
+            { id: '2', numeroFicha: 'FC-002', fechaSolicitud: '2025-01-15', procuraduria: 'Procuraduría Cali', medioControl: 'Nulidad y Restablecimiento', causaProcesal: 'Acto administrativo ilegal', entidadInvolucrada: 'Ministerio de Defensa', valorEstimado: 80000000, estado: 'En Revisión', descripcionHechos: 'Simulación de hechos de la conciliación 2.' },
+            { id: '3', numeroFicha: 'FC-003', fechaSolicitud: '2025-01-20', procuraduria: 'Procuraduría Medellín', medioControl: 'Reparación Directa', causaProcesal: 'Daño antijurídico', entidadInvolucrada: 'Ministerio de Salud', valorEstimado: 250000000, estado: 'Cerrada', descripcionHechos: 'Simulación de hechos de la conciliación 3.' },
+        ];
+
+        const DUMMY_FICHAS_JUDICIAL = [
+            { id: '101', numeroFicha: 'FJ-001', cupInicial: 'CUP12345', despachoActual: 'Juzgado 1 Administrativo', medioControl: 'Reparación Directa', causaProcesal: 'Lesiones personales', instanciaEtapaProcesal: 'Primera Instancia', entidadDemandada: 'Fuerzas Militares', valorPretensiones: 300000000, estado: 'Activo', descripcionHechos: 'Simulación de hechos del proceso judicial 1.' },
+            { id: '102', numeroFicha: 'FJ-002', cupInicial: 'CUP67890', despachoActual: 'Tribunal Administrativo', medioControl: 'Acción de Tutela', causaProcesal: 'Derecho fundamental', instanciaEtapaProcesal: 'Segunda Instancia', entidadDemandada: 'Fiscalía General', valorPretensiones: 50000000, estado: 'En Litigio', descripcionHechos: 'Simulación de hechos del proceso judicial 2.' },
+        ];
+
+        let currentView = 'dashboard-view'; // Vista inicial
+
+        // Función para cambiar de vista
+        function showView(viewId, fichaType = null, fichaId = null) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.content > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            // Remover 'active' de todos los enlaces de la sidebar
+            document.querySelectorAll('.sidebar ul li a').forEach(a => {
+                a.classList.remove('active');
+            });
+
+            // Mostrar la vista seleccionada
+            document.getElementById(viewId).style.display = 'block';
+            currentView = viewId;
+
+            // Marcar el enlace activo en la sidebar
+            const activeLink = document.querySelector(`.sidebar ul li a[data-view="${viewId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            } else if (viewId === 'ficha-form-view') {
+                 // Si estamos en el formulario, marcar el enlace del listado correspondiente
+                const listLink = document.querySelector(`.sidebar ul li a[data-view="${fichaType}-list-view"]`);
+                if(listLink) listLink.classList.add('active');
+            }
+            
+            // Cerrar sidebar en móvil si está abierta al navegar
+            if (window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+
+
+            // Cargar datos si es una vista de listado o formulario
+            if (viewId === 'conciliacion-list-view') {
+                renderFichasTable(DUMMY_FICHAS_CONCILIACION, 'conciliacion-table', 'conciliacion');
+            } else if (viewId === 'judicial-list-view') {
+                renderFichasTable(DUMMY_FICHAS_JUDICIAL, 'judicial-table', 'judicial');
+            } else if (viewId === 'ficha-form-view') {
+                loadFichaForm(fichaType, fichaId);
+            }
+        }
+
+        // Función para renderizar tablas de fichas
+        function renderFichasTable(fichas, tableId, type) {
+            const tableBody = document.querySelector(`#${tableId} tbody`);
+            tableBody.innerHTML = ''; // Limpiar tabla
+
+            fichas.forEach(ficha => {
+                const row = tableBody.insertRow();
+                if (type === 'conciliacion') {
+                    row.insertCell().textContent = ficha.numeroFicha;
+                    row.insertCell().textContent = ficha.fechaSolicitud;
+                    row.insertCell().textContent = ficha.procuraduria;
+                    row.insertCell().textContent = ficha.entidadInvolucrada;
+                    row.insertCell().textContent = ficha.estado;
+                } else if (type === 'judicial') {
+                    row.insertCell().textContent = ficha.numeroFicha;
+                    row.insertCell().textContent = ficha.cupInicial;
+                    row.insertCell().textContent = ficha.despachoActual;
+                    row.insertCell().textContent = ficha.medioControl;
+                    row.insertCell().textContent = ficha.entidadDemandada;
+                    row.insertCell().textContent = ficha.estado;
+                }
+                
+                const actionsCell = row.insertCell();
+                actionsCell.className = 'action-buttons';
+                const viewButton = document.createElement('button');
+                viewButton.innerHTML = `<i class="material-icons">visibility</i> Ver Detalle`;
+                viewButton.onclick = () => showFichaForm(type, ficha.id);
+                actionsCell.appendChild(viewButton);
+            });
+        }
+
+        // Función para filtrar tablas
+        function filterTable(tableId, searchTerm, ...columnIndexes) {
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            const filter = searchTerm.toLowerCase();
+
+            for (let i = 0; i < rows.length; i++) {
+                let rowText = '';
+                for (const colIndex of columnIndexes) {
+                    rowText += rows[i].getElementsByTagName('td')[colIndex]?.textContent.toLowerCase() || '';
+                }
+                if (rowText.includes(filter)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+
+
+        // Función para mostrar el formulario de ficha
+        function showFichaForm(type, id = 'new') {
+            document.getElementById('form-ficha-type').value = type;
+            document.getElementById('form-ficha-id').value = id;
+            
+            const formTitle = document.getElementById('ficha-form-title');
+            const numeroFichaField = document.getElementById('numeroFicha');
+            const entidadInvolucradaField = document.getElementById('form-field-entidadInvolucrada');
+            const cupInicialField = document.getElementById('form-field-cupInicial');
+            const valorEstimadoLabel = document.querySelector('label[for="valorEstimado"]');
+
+
+            if (id === 'new') {
+                formTitle.textContent = `Nueva Ficha de ${type === 'conciliacion' ? 'Conciliación Prejudicial' : 'Intervención Judicial'}`;
+                // Limpiar formulario para nueva ficha
+                document.getElementById('current-ficha-form').reset();
+                numeroFichaField.value = `Auto-${Date.now().toString().slice(-6)}`; // Generar un número dummy
+                numeroFichaField.readOnly = false; // Permitir edición para nuevas, o generar automáticamente en backend
+            } else {
+                formTitle.textContent = `Editar Ficha de ${type === 'conciliacion' ? 'Conciliación Prejudicial' : 'Intervención Judicial'}`;
+                numeroFichaField.readOnly = true;
+            }
+
+            // Ajustar campos específicos por tipo de ficha
+            if (type === 'conciliacion') {
+                entidadInvolucradaField.style.display = 'block';
+                cupInicialField.style.display = 'none';
+                valorEstimadoLabel.textContent = 'Valor Estimado';
+            } else { // judicial
+                entidadInvolucradaField.style.display = 'none';
+                cupInicialField.style.display = 'block';
+                valorEstimadoLabel.textContent = 'Valor Pretensiones';
+            }
+
+            showView('ficha-form-view', type, id);
+        }
+
+        // Función para cargar datos en el formulario
+        function loadFichaForm(type, id) {
+            const form = document.getElementById('current-ficha-form');
+            let fichaData = null;
+
+            if (type === 'conciliacion') {
+                fichaData = DUMMY_FICHAS_CONCILIACION.find(f => f.id === id);
+            } else if (type === 'judicial') {
+                fichaData = DUMMY_FICHAS_JUDICIAL.find(f => f.id === id);
+            }
+
+            if (fichaData) {
+                // Rellenar los campos del formulario con los datos de la ficha
+                for (const key in fichaData) {
+                    const inputElement = form.elements[key];
+                    if (inputElement) {
+                        inputElement.value = fichaData[key];
+                    }
+                }
+            } else if (id !== 'new') {
+                alert('Ficha no encontrada.');
+                goBackToList();
+            }
+        }
+
+        // Función para volver al listado
+        function goBackToList() {
+            const fichaType = document.getElementById('form-ficha-type').value;
+            if (fichaType === 'conciliacion') {
+                showView('conciliacion-list-view');
+            } else if (fichaType === 'judicial') {
+                showView('judicial-list-view');
+            } else {
+                showView('dashboard-view'); // Fallback
+            }
+        }
+
+        // Manejador del submit del formulario (solo para demo)
+        document.getElementById('current-ficha-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evitar el envío real del formulario
+            alert('Formulario enviado (demostración). Los datos no se guardan realmente.');
+            console.log('Datos del formulario:', Object.fromEntries(new FormData(event.target)));
+            goBackToList(); // Volver al listado después de "guardar"
+        });
+
+        // Toggle para la sidebar en móviles
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        });
+
+
+        // Inicializar la vista al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Manejar clics en la sidebar para cambiar de vista
+            document.querySelectorAll('.sidebar ul li a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const viewId = link.getAttribute('data-view');
+                    showView(viewId);
+                });
+            });
+
+            // Mostrar la vista de dashboard por defecto al cargar
+            showView('dashboard-view');
+        });
+
+        // Datos Dummy para el formulario
+        const DUMMY_PARTES_PROCESALES = [
+            { tipoParte: 'ENTIDAD', tipoIdentificacion: 'NIT', identificacion: '800000000-1', nombreRazonSocial: 'POLICIA NACIONAL', calidad: 'CONVOCADO' },
+            { tipoParte: 'OTRA PARTE', tipoIdentificacion: 'C.C.', identificacion: '123456789', nombreRazonSocial: 'Juan Pérez', calidad: 'APODERADO DEL CONVOCADO' }
+        ];
+
+        // Función para agregar una fila a la tabla de partes procesales
+        function addParteRow(parteData = {}) {
+            const tableBody = document.querySelector('#partes-procesales-table tbody');
+            const row = tableBody.insertRow();
+            row.setAttribute('data-row-id', Date.now()); // Para identificar la fila para eliminar
+
+            const defaultParte = {
+                tipoParte: parteData.tipoParte || '',
+                tipoIdentificacion: parteData.tipoIdentificacion || '',
+                identificacion: parteData.identificacion || '',
+                nombreRazonSocial: parteData.nombreRazonSocial || '',
+                calidad: parteData.calidad || ''
+            };
+
+            row.innerHTML = `
+                <td>
+                    <select name="partes[tipoParte][]">
+                        <option value="ENTIDAD" ${defaultParte.tipoParte === 'ENTIDAD' ? 'selected' : ''}>ENTIDAD</option>
+                        <option value="OTRA PARTE" ${defaultParte.tipoParte === 'OTRA PARTE' ? 'selected' : ''}>OTRA PARTE</option>
+                        <option value="PERSONA NATURAL" ${defaultParte.tipoParte === 'PERSONA NATURAL' ? 'selected' : ''}>PERSONA NATURAL</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="partes[tipoIdentificacion][]">
+                        <option value="NIT" ${defaultParte.tipoIdentificacion === 'NIT' ? 'selected' : ''}>Número de Identificación Tributaria</option>
+                        <option value="C.C." ${defaultParte.tipoIdentificacion === 'C.C.' ? 'selected' : ''}>Cédula de Ciudadanía</option>
+                        <option value="PASAPORTE" ${defaultParte.tipoIdentificacion === 'PASAPORTE' ? 'selected' : ''}>Pasaporte</option>
+                    </select>
+                </td>
+                <td><input type="text" name="partes[identificacion][]" value="${defaultParte.identificacion}" placeholder="Identificación"></td>
+                <td><input type="text" name="partes[nombreRazonSocial][]" value="${defaultParte.nombreRazonSocial}" placeholder="Nombre/Razón Social"></td>
+                <td><input type="text" name="partes[calidad][]" value="${defaultParte.calidad}" placeholder="Calidad"></td>
+                <td>
+                    <button type="button" class="action-buttons" onclick="removeParteRow(this)"><i class="material-icons" style="color: #d32f2f;">delete</i></button>
+                </td>
+            `;
+        }
+
+        // Función para eliminar una fila de la tabla de partes procesales
+        function removeParteRow(button) {
+            const row = button.closest('tr');
+            if (row) {
+                row.remove();
+            }
+        }
+
+        // Función para cargar las partes procesales al abrir el formulario
+        function loadPartesProcesales(fichaId) {
+            const tableBody = document.querySelector('#partes-procesales-table tbody');
+            tableBody.innerHTML = ''; // Limpiar filas existentes
+
+            let partesToLoad = [];
+            if (fichaId && fichaId !== 'new') {
+                // Aquí deberías cargar las partes asociadas a la ficha real
+                // Por ahora, para la demo, siempre usaremos los dummy
+                partesToLoad = DUMMY_PARTES_PROCESALES;
+            } else {
+                // Para una ficha nueva, se puede empezar con una fila vacía o sin filas.
+                // Aquí empezamos con una fila vacía para que el usuario pueda empezar a añadir.
+                partesToLoad = [{ tipoParte: '', tipoIdentificacion: '', identificacion: '', nombreRazonSocial: '', calidad: '' }];
+            }
+
+            partesToLoad.forEach(parte => addParteRow(parte));
+        }
+
+        // Modificar la función showFichaForm para llamar a loadPartesProcesales
+        const originalShowFichaForm = showFichaForm; // Guardar la función original
+        showFichaForm = function(type, id = 'new') {
+            originalShowFichaForm(type, id); // Llamar a la función original
+            // Ahora, carga las partes procesales
+            loadPartesProcesales(id);
+        };
+
+        // Modificar el submit del formulario para capturar los datos de la tabla
+        document.getElementById('current-ficha-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evitar el envío real del formulario
+
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // Recopilar datos de la tabla de partes procesales
+            const partes = [];
+            const rows = document.querySelectorAll('#partes-procesales-table tbody tr');
+            rows.forEach(row => {
+                const parte = {};
+                parte.tipoParte = row.querySelector('select[name="partes[tipoParte][]"]').value;
+                parte.tipoIdentificacion = row.querySelector('select[name="partes[tipoIdentificacion][]"]').value;
+                parte.identificacion = row.querySelector('input[name="partes[identificacion][]"]').value;
+                parte.nombreRazonSocial = row.querySelector('input[name="partes[nombreRazonSocial][]"]').value;
+                parte.calidad = row.querySelector('input[name="partes[calidad][]"]').value;
+                partes.push(parte);
+            });
+            data.partesProcesales = partes;
+
+            console.log('Datos del formulario con partes procesales:', data);
+            alert('Formulario enviado (demostración). Los datos no se guardan realmente.');
+            goBackToList(); // Volver al listado después de "guardar"
+        });
+
+    </script>
+</body>
+</html>

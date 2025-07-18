@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica PGN - Propuesta Visual Responsive</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/my_style.css') }}?v=1.1" />
+</head>
+<body>
+    <div class="header" style="background: #7e8fbe;">
+        <button class="menu-icon" id="menuToggle"><i class="material-icons">menu</i></button>
+        <img src="{{ url_for('static', filename ='assets/imagenes/DAE.png') }}" alt="Logo" style="text-align: center; height: auto; max-width: 150px;" />
+        <button class="logout-button">Cerrar Sesión <i class="material-icons">logout</i></button>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar" id="sidebar">
+            <ul>
+                <li><a href="#preventivo" data-view="preventivo-list-view"><i class="material-icons">expand_circle_down</i> Preventivo</a></li>
+                <li><a href="#conciliacion-list" class="active" data-view="conciliacion-list-view"><i class="material-icons">assignment</i> Conciliación</a></li>
+                <li><a href="#judicial-list" data-view="judicial-list-view"><i class="material-icons">gavel</i>Intervención</a></li>
+                </ul>
+        </div>
+</body>
+</html>

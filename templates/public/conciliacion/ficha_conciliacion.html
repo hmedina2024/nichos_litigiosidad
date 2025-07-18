@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica PGN - Propuesta Visual Responsive</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/my_style.css') }}?v=1.1" />
+</head>
+
+<body>
+    {% include 'public/incluidos/menu_sidebar.html' %}
+    <div class="card-body p-4">
+        <div class="card-header">DATOS GENERALES</div>
+        <form class="form-general">
+            <!-- Primera fila -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Partes Procesales:</label>
+                        <p class="form-control-plaintext">Prueba partes procesales</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Medio de Control:</label>
+                        <p class="form-control-plaintext">Prueba Medio de control</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Valoración Económica:</label>
+                        <p class="form-control-plaintext">$200.000.000</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Fecha de los Hechos:</label>
+                        <p class="form-control-plaintext">05/06/2025</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda fila -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Lugar de los Hechos:</label>
+                        <p class="form-control-plaintext">Bogotá D.C.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Hechos Procesales:</label>
+                        <p class="form-control-plaintext">Acoso Laboral</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Fecha de Solicitud:</label>
+                        <p class="form-control-plaintext">05/06/2025</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="form-label fw-bold">Fecha de Audiencia:</label>
+                        <p class="form-control-plaintext">05/08/2025</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <div class="card-header">INGRESAR DATOS PARA VER EL COMPORTAMIENTO HISTÓRICO</div>
+        <form class="form-general">
+            <!-- Primera fila -->
+            <div class="row mb-6">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="entidad_convocada" class="form-label fw-bold">Entidad Convocada:</label>
+                        <select name="entidad_convocada" id="entidad_convocada" multiple="multiple"
+                            class="form-control select2" style="width:100%;">
+                            <option value="contraloria_general">Contraloría General de la República</option>
+                            <option value="procuraduria_general">Procuraduría General de la Nación</option>
+                            <option value="fiscalia_general">Fiscalía General de la Nación</option>
+                            <option value="defensoria">Defensoría del Pueblo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="medio_control" class="form-label fw-bold text-primary">Medio de Control:</label>
+                    <select name="medio_control" id="medio_control" class="form-control select2">
+                        <option value="" selected>Seleccionar Medio de Control</option>
+                        <option value="Disciplinario">Disciplinario</option>
+                        <option value="Preventivo">Preventivo</option>
+                        <option value="Intervención">Intervención</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="causaProcesal" class="form-label fw-bold">Causa Procesal</label>
+                        <select name="causaProcesal" id="causaProcesal" multiple="multiple" class="form-control select2"
+                            required style="width:100%;">
+                            <option value="reparacion_directa">Reparación Directa</option>
+                            <option value="nulidad_restablecimiento">Nulidad y Restablecimiento del Derecho</option>
+                            <option value="accion_tutela">Acción de Tutela</option>
+                            <option value="cumplimiento">Acción de Cumplimiento</option>
+                            <option value="contractual">Controversias Contractuales</option>
+                            <option value="electores">Acción Electoral</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <br>
+                        <button type="button" id="searchButton" class="btn btn-primary rounded-pill px-4">
+                            Buscar <i class="bi bi-search ms-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Dashboard Section (Hidden by default) -->
+        <div id="dashboard-container" class="mt-5" style="display: none;">
+            <div class="container-fluid my-4">
+                <h1 class="card-header text-center">LITIGIOSIDAD EN CONTRA DE LA NACIÓN</h1>
+
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <div class="bg-white p-3 rounded-3 shadow-sm h-100">
+                            <br>
+                            <div class="row oval-row">
+
+                                <div class="col-6 col-md-4 d-flex justify-content-center">
+                                    <div class="stat-card bg-teal">
+                                        <div class="stat-value">337.198</div>
+                                        <div class="stat-label">Procesos Activos</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 d-flex justify-content-center">
+                                    <div class="stat-card bg-teal text-center">
+                                        <div class="stat-value">$693,7</div>
+                                        <div class="stat-label">Pretensiones en Billones, Procesos Activos</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="bg-white p-3 rounded-3 shadow-sm h-100">
+                            <h6 class="text-center fw-bold mb-3">TASA DE ÉXITO HISTÓRICA</h6>
+                            <div class="row">
+                                <div class="col-6 donut-chart-container">
+                                    <div class="donut-chart"
+                                        style="background: conic-gradient(#4caf50 0% 67.8%, #e0e0e0 67.8% 100%);">
+                                        <span>67,8%</span>
+                                    </div>
+                                    <div class="chart-label">CON COLPENSIONES</div>
+                                </div>
+                                <div class="col-6 donut-chart-container">
+                                    <div class="donut-chart"
+                                        style="background: conic-gradient(#4caf50 0% 54.4%, #e0e0e0 54.4% 100%);">
+                                        <span>54,4%</span>
+                                    </div>
+                                    <div class="chart-label">SIN COLPENSIONES</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h4 class="fw-bold mb-3">ENTIDAD: POLICÍA NACIONAL</h4>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="dashboard-section">
+                            <div class="row align-items-center">
+                                <div class="col-auto d-none d-lg-block">
+                                    <div class="section-title-vertical">CIFRAS GENERALES</div>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-4">
+                                            <div class="stat-card bg-purple"><span class="stat-value">18.551</span><span
+                                                    class="stat-label">Procesos Activos</span></div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-4">
+                                            <div class="stat-card bg-purple"><span class="stat-value">$166,5</span><span
+                                                    class="stat-label">Pretensiones en Billones</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="dashboard-section">
+                            <div class="row align-items-center">
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-dark-blue"><span class="stat-value">---</span><span
+                                            class="stat-label">Terminados por Ejecutoria</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-dark-blue"><span class="stat-value">---</span><span
+                                            class="stat-label">Pretensiones en Billones</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-dark-blue"><span class="stat-value">---</span><span
+                                            class="stat-label">Valor Condena Económica</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="donut-chart-container">
+                                        <div class="donut-chart"
+                                            style="background: conic-gradient(#20c997 0% 70.8%, #e0e0e0 70.8% 100%);">
+                                            <span>70.8%</span>
+                                        </div>
+                                        <div class="chart-label text-center">Tasa de Éxito Histórica</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="dashboard-section">
+                            <div class="row align-items-center">
+                                <div class="col-auto d-none d-lg-block">
+                                    <div class="section-title-vertical">REPARACIÓN DIRECTA</div>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-4">
+                                            <div class="stat-card bg-purple"><span class="stat-value">18.551</span><span
+                                                    class="stat-label">Procesos Activos</span></div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-4">
+                                            <div class="stat-card bg-purple"><span class="stat-value">$166,5</span><span
+                                                    class="stat-label">Pretensiones en Billones</span></div>
+                                        </div>
+                                        <div class="donut-chart-container">
+                                            <div class="donut-chart"
+                                                style="background: conic-gradient(#ef5350 0% 21.7%, #e0e0e0 21.7% 100%);">
+                                                <span>21,7%
+                                            </div>
+                                            <div class="chart-label text-center">Probabilidad de Pérdida</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="dashboard-section">
+                            <div class="row align-items-center">
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-grey"><span class="stat-value">---</span><span
+                                            class="stat-label">Terminados por Ejecutoria</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-grey"><span class="stat-value">---</span><span
+                                            class="stat-label">Pretensiones en Billones</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-grey"><span class="stat-value">---</span><span
+                                            class="stat-label">Valor Condena Económica</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="donut-chart-container">
+                                        <div class="donut-chart"
+                                            style="background: conic-gradient(#ef5350 0% 74.1%, #e0e0e0 74.1% 100%);">
+                                            <span>74,1%</span>
+                                        </div>
+                                        <div class="chart-label text-center">Tasa de Éxito Histórica</div>
+                                    </div>
+                                </div>
+                                <div class="row col-lg-9 justify-content-center mt-3">
+                                    <div class="col-lg-4 col-md-4">
+                                        <div class="stat-card bg-secondary"><span class="stat-value">---</span><span
+                                                class="stat-label">Valor Promedio
+                                                Condena</span></div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                        <div class="stat-card bg-secondary"><span class="stat-value">---</span><span
+                                                class="stat-label">Relación Condena
+                                                Pretensión</span></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="dashboard-section">
+                            <div class="row align-items-center">
+                                <div class="col-auto d-none d-lg-block">
+                                    <div class="section-title-vertical">REPARACIÓN DIRECTA-MUERTE POR FALTA DE ADOPCIÓN
+                                        DE MEDIDAS DE PROTECCIÓ Y SEGURIDAD</div>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-4">
+                                            <div class="stat-card bg-purple"><span class="stat-value">18.551</span><span
+                                                    class="stat-label">Procesos Activos</span></div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-4">
+                                            <div class="stat-card bg-purple"><span class="stat-value">$166,5</span><span
+                                                    class="stat-label">Pretensiones en Billones</span></div>
+                                        </div>
+                                        <div class="donut-chart-container">
+                                            <div class="donut-chart"
+                                                style="background: conic-gradient(#ef5350 0% 21.7%, #e0e0e0 21.7% 100%);">
+                                                <span>21,7%
+                                            </div>
+                                            <div class="chart-label text-center">Probabilidad de Pérdida</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="dashboard-section">
+                            <div class="row align-items-center">
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-grey"><span class="stat-value">---</span><span
+                                            class="stat-label">Terminados por Ejecutoria</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-grey"><span class="stat-value">---</span><span
+                                            class="stat-label">Pretensiones en Billones</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="stat-card bg-grey"><span class="stat-value">---</span><span
+                                            class="stat-label">Valor Condena Económica</span></div>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <div class="donut-chart-container">
+                                        <div class="donut-chart"
+                                            style="background: conic-gradient(#ef5350 0% 74.1%, #e0e0e0 74.1% 100%);">
+                                            <span>74,1%</span>
+                                        </div>
+                                        <div class="chart-label text-center">Tasa de Éxito Histórica</div>
+                                    </div>
+                                </div>
+                                <div class="row col-lg-9 justify-content-center mt-3">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="stat-card bg-secondary"><span class="stat-value">---</span><span
+                                                class="stat-label">Valor Promedio
+                                                Condena</span></div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="stat-card bg-secondary"><span class="stat-value">---</span><span
+                                                class="stat-label">Relación Condena
+                                                Pretensión</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="form-control col-lg-6">
+                        <div class="col-lg-4 col-md-6">
+                                        <div class="stat-card bg-secondary"><span class="stat-value">---</span><span
+                                                class="stat-label">Relación Condena
+                                                Pretensión</span></div>
+                                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Inicializar Select2 para todos los selects
+            $('.select2').select2({
+                theme: "bootstrap-5",
+                placeholder: function () {
+                    return $(this).data('placeholder') || "Seleccione una opción";
+                },
+                allowClear: true
+            });
+            // Manejador del clic del botón de búsqueda
+            $('#searchButton').on('click', function () {
+                // Mostrar el contenedor del dashboard
+                $('#dashboard-container').slideDown();
+
+            });
+        });
+    </script>
+</body>
+
+</html>
