@@ -770,3 +770,12 @@ body {
 .bg-login {
     background-color: #f0f2f5;
 }
+
+.table-form th, .table-form td {
+      vertical-align: middle;
+      text-align: center;
+    }
+    .table-form td.text-start {
+      text-align: left;
+      font-size: 1.2rem;
+    }
