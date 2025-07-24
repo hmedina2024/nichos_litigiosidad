@@ -23,26 +23,26 @@
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Partes Procesales:</label>
-                        <p class="form-control-plaintext">Prueba partes procesales</p>
+                        <label class="form-label fw-bold">NÚMERO FICHA:</label>
+                        <p class="form-control-plaintext">{{ "FC-" ~ proceso.ID_CASO if proceso else 'N/A' }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Medio de Control:</label>
-                        <p class="form-control-plaintext">Prueba Medio de control</p>
+                        <label class="form-label fw-bold">CLASE DEL PROCESO:</label>
+                        <p class="form-control-plaintext">{{ proceso.CLASE_PROCESO if proceso else 'N/A' }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Valoración Económica:</label>
-                        <p class="form-control-plaintext">$200.000.000</p>
+                        <label class="form-label fw-bold">VALORACION ECONOMICA:</label>
+                        <p class="form-control-plaintext">${{ "{:,.2f}".format(proceso.VR_PRETENDIDO) if proceso and proceso.VR_PRETENDIDO else '0.00' }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Fecha de los Hechos:</label>
-                        <p class="form-control-plaintext">05/06/2025</p>
+                        <label class="form-label fw-bold">FECHA HECHOS:</label>
+                        <p class="form-control-plaintext">{{ proceso.FECHA_SIM.strftime('%d/%m/%Y') if proceso and proceso.FECHA_SIM else 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -51,30 +51,59 @@
             <div class="row mb-4">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Lugar de los Hechos:</label>
-                        <p class="form-control-plaintext">Bogotá D.C.</p>
+                        <label class="form-label fw-bold">DEPENDENCIA ACTUAL:</label>
+                        <p class="form-control-plaintext">{{ proceso.DEPENDENCIA_CASO if proceso else 'N/A' }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Hechos Procesales:</label>
-                        <p class="form-control-plaintext">Acoso Laboral</p>
+                        <label class="form-label fw-bold">TIPO PROCESO:</label>
+                        <p class="form-control-plaintext">{{ proceso.TIPO_PROCESO if proceso else 'N/A' }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Fecha de Solicitud:</label>
-                        <p class="form-control-plaintext">05/06/2025</p>
+                        <label class="form-label fw-bold">FECHA SOLICITUD:</label>
+                        <p class="form-control-plaintext">{{ proceso.FEC_EXPEDICION.strftime('%d/%m/%Y') if proceso and proceso.FEC_EXPEDICION else 'N/A' }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="form-label fw-bold">Fecha de Audiencia:</label>
-                        <p class="form-control-plaintext">05/08/2025</p>
+                        <label class="form-label fw-bold">FECHA CITACIÓN AUDIENCIA:</label>
+                        <p class="form-control-plaintext">{{ proceso.FEC_AUDIENCIA.strftime('%d/%m/%Y') if proceso and proceso.FEC_AUDIENCIA else 'N/A' }}</p>
                     </div>
                 </div>
             </div>
         </form>
+        </form>
+        <br>
+        
+        {% if intervinientes %}
+        <div class="card-header">PARTES PROCESALES</div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Tipo Identificación</th>
+                        <th>Identificación</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for interviniente in intervinientes %}
+                    <tr>
+                        <td>{{ interviniente.Tipo or 'N/A' }}</td>
+                        <td>{{ interviniente.Tipo_Identificacion or 'N/A' }}</td>
+                        <td>{{ interviniente.Identificacion or 'N/A' }}</td>
+                        <td>{{ interviniente.Nombre or 'N/A' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
         <br>
         <div class="card-header">INGRESAR DATOS PARA VER EL COMPORTAMIENTO HISTÓRICO</div>
         <form class="form-general">

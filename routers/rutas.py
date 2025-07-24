@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from controllers.funciones import buscar_conciliacion_por_iuc, obtener_intervinientes_por_iuc
 
 # Definimos el Blueprint para las rutas principales/home
 home_routes = Blueprint('home_routes', __name__)
@@ -33,10 +34,26 @@ def buscar_conciliacion():
     Muestra la página para buscar la conciliación y redirige al hacer submit.
     """
     if request.method == 'POST':
-        # Obtener el valor del IUC (opcional, por ahora solo redirigimos)
         iuc = request.form.get('iuc')
-        # Redirigir a la ficha de conciliación
-        return redirect(url_for('home_routes.ficha_conciliacion'))
+        if not iuc:
+            flash('Por favor, ingresa un IUC.', 'warning')
+            return redirect(url_for('home_routes.buscar_conciliacion'))
+
+        # Realizar ambas búsquedas
+        proceso = buscar_conciliacion_por_iuc(iuc)
+        intervinientes = obtener_intervinientes_por_iuc(iuc)
+
+        # Solo si no se encuentra NADA, mostrar error
+        if not proceso and not intervinientes:
+            flash(f'No se encontró información para el IUC {iuc} en ninguna de las tablas consultadas.', 'danger')
+            return redirect(url_for('home_routes.buscar_conciliacion'))
+
+        # Si se encuentra algo, renderizar la ficha con los datos disponibles
+        return render_template(
+            'public/conciliacion/ficha_conciliacion.html',
+            proceso=proceso,
+            intervinientes=intervinientes
+        )
     
     # Si es GET, muestra la página de búsqueda
     return render_template('public/conciliacion/buscar_conciliacion.html')
